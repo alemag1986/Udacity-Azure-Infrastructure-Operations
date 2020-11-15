@@ -1,0 +1,44 @@
+{
+	"description" : "udacity project ubuntu vm image",
+	"min_packer_version": "1.6.2",
+	"variables": {
+		"image_name": "ubuntu-udacity-project",
+		"client_id": "",
+		"client_secret": "",
+		"subscription_id": "",
+		"resource_group_name": "images-rg",
+		"image_location": "East US 2",
+		"image_size": "Standard_F2"
+	},
+	"builders": [
+		{
+			"type": "azure-arm",
+			"client_id": "{{user `client_id`}}",
+			"client_secret": "{{user `client_secret`}}",
+			"subscription_id": "{{user `subscription_id`}}",
+			"os_type": "Linux",
+			"image_publisher": "Canonical",
+			"image_offer": "UbuntuServer",
+			"image_sku": "18.04-LTS",
+			"managed_image_resource_group_name": "{{user `resource_group_name`}}",
+			"managed_image_name": "{{user `image_name`}}",
+			"location": "{{user `image_location`}}",
+			"vm_size": "{{user `image_size`}}",
+
+			"azure_tags": {
+				"dept": "udacity",
+				"task": "ubuntu-image"
+			}
+		}
+	],
+	"provisioners": [
+		{
+			"type": "shell",
+			"inline": [
+				"echo 'Hello, World!' > index.html",
+				"nohup busybox httpd -f -p 80 &"
+			],
+			"inline_shebang": "/bin/sh -x"
+		}
+	]
+}
